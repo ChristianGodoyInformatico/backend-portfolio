@@ -195,7 +195,7 @@ var controller = {
 					topic
 				});
 
-			});
+			});		
 
 	},
 
