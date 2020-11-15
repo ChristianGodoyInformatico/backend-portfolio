@@ -166,36 +166,36 @@ var controller = {
 
 		// FIND POR EL ID DEL TOPIC
 		Topic.findById(topicId)
-			.populate('user')
-			.populate('comments.user')
-			.exec((err, topic) => {
+		.populate('user')
+		.populate('comments.user')
+		.exec((err, topic) => {
 
-				if(err){
+			if(err){
 
-					return res.status(500).send({
-						status: 'error',
-						message: 'Error en la peticion'
-					});
-
-				}
-
-				if(!topic){
-
-					return res.status(404).send({
-						status: 'error',
-						message: 'No existe el tema'
-					});
-
-				}
-
-
-				// DEVOLVER RESULTADO
-				return res.status(200).send({
-					status: 'success',
-					topic
+				return res.status(500).send({
+					status: 'error',
+					message: 'Error en la peticion'
 				});
 
-			});		
+			}
+
+			if(!topic){
+
+				return res.status(404).send({
+					status: 'error',
+					message: 'No existe el tema'
+				});
+
+			}
+
+
+			// DEVOLVER RESULTADO
+			return res.status(200).send({
+				status: 'success',
+				topic
+			});
+
+		});		
 
 	},
 
@@ -304,6 +304,8 @@ var controller = {
 			{ "title": { "$regex": searchString, "$options": "i" } },
 			{ "content": { "$regex": searchString, "$options": "i" } },
 		]})
+		.populate('user')
+		.sort([['date', 'descending']])
 		.exec((err, topics) => {
 
 			if(err){

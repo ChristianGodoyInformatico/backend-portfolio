@@ -301,7 +301,7 @@ var controller = {
 			var userId = req.user.sub;
 
 			// BUSCAR Y ACTUALIZAR DOCUMENTO(USUARIO)
-			User.findOneAndUpdate({_id: userId}, {image: file_name}, {new:true}, (err, userUpdated) => {
+			User.findOneAndUpdate({_id: userId}, {pdf: file_name}, {new:true}, (err, userUpdated) => {
 				
 				if(err){
 					// Devolver respuesta

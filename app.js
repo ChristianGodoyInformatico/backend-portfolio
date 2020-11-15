@@ -13,6 +13,7 @@ var topic_routes = require('./routes/topic');
 var comment_routes = require('./routes/comment');
 var dev_routes = require('./routes/dev');
 var img_dev_routes = require('./routes/img_dev');
+var certificate_routes = require('./routes/certificate');
 
 // MIDDLEWARES
 app.use(bodyParser.urlencoded({extended: false}));
@@ -33,6 +34,7 @@ app.use('/api', topic_routes);
 app.use('/api', comment_routes);
 app.use('/api', dev_routes);
 app.use('/api', img_dev_routes);
+app.use('/api', certificate_routes);
 
 // EXPORTAR EL MODULO
 module.exports = app;
