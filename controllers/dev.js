@@ -87,6 +87,31 @@ var controller = {
 
 		});
 
+	},
+
+
+	getDev: function(req, res){
+
+		var devId = req.params.id;
+
+		Dev.findById(devId)
+		.populate('images')
+		.exec((err, dev) => {
+
+			if(err || !dev){
+				return res.status(404).send({
+					status: 'error',
+					message: 'No existe el proyecto seleccionado'
+				});
+			}
+
+			return res.status(200).send({
+				status: 'success',
+				dev
+			});
+
+		});	
+
 	}
 
 

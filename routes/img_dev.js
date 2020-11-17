@@ -12,6 +12,7 @@ var md_upload = multipart({ uploadDir: './uploads/projects' });
 // RUTAS DE PRUEBA
 router.get('/probando-img', ImgDevController.probando);
 router.post('/dev/:devId', md_upload, ImgDevController.add);
+router.get('/image/:fileName', ImgDevController.getImages);
 
 // RUTAS DE DESARROLLOS
 

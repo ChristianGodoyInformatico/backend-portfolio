@@ -2,6 +2,8 @@
 
 var validator = require('validator');
 var Dev = require('../models/dev');
+var fs = require('fs');
+var path = require('path');
 
 var controller = {
 
@@ -101,7 +103,26 @@ var controller = {
 		}
 
 
-	}
+	},
+
+
+	getImages: function(req, res){
+		var fileName = req.params.fileName;
+		var pathFile = './uploads/projects/'+fileName;
+
+		fs.exists(pathFile, (exists) => {
+
+			if(exists){
+				return res.sendFile(path.resolve(pathFile));
+			}else{
+				return res.status(404).send({
+					message: 'La imagen no existe'
+				});
+			}
+
+		});
+
+	},
 
 
 };

@@ -108,10 +108,10 @@ var controller = {
 		
 		}else{
 			// RECOGER EL ID DEL CERTIFICADO DE LA URL
-			var certificadoId = req.params.certificadoId;
+			var certificateId = req.params.certificateId;
 
 			// BUSCAR Y ACTUALIZAR DOCUMENTO(USUARIO)
-			Certificate.findOneAndUpdate({_id: certificadoId}, {pdf: file_name}, {new:true}, (err, certificateUpdated) => {
+			Certificate.findOneAndUpdate({_id: certificateId}, {pdf: file_name}, {new:true}, (err, certificateUpdated) => {
 				
 				if(err){
 					// Devolver respuesta
@@ -163,19 +163,12 @@ var controller = {
 
 	getCertificate: function(req, res){
 
-		var certificadoId = req.params.certificadoId;
+		var certificadoId = req.params.id;
 
 		Certificate.findById(certificadoId).exec((err, certificate) => {
 
 			if(err || !certificate){
-				return res.status(403).send({
-					status: 'error',
-					message: 'Error con la peticion'
-				});
-			}
-
-			if(!certificate){
-				return res.status(400).send({
+				return res.status(404).send({
 					status: 'error',
 					message: 'No existe el usuario'
 				});
@@ -184,6 +177,26 @@ var controller = {
 			return res.status(200).send({
 				status: 'success',
 				certificate
+			});
+
+		});	
+
+	},
+
+
+	getCertificates: function(req, res){
+
+		Certificate.find().exec((err, certificates) => {
+			if(err || !certificates){
+				return res.status(404).send({
+					status: 'error',
+					message: 'No hay usuarios que mostrar'
+				});
+			}
+
+			return res.status(200).send({
+				status: 'success',
+				certificates
 			});
 
 		});

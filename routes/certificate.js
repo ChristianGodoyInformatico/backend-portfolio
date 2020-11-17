@@ -11,9 +11,10 @@ var md_upload = multipart({ uploadDir: './uploads/certificates' });
 
 // RUTAS
 router.get('/prueba2', CertificateController.prueba2);
-router.post('/nuevo-certificado', md_upload, CertificateController.save);
-router.put('/certificado/:certificadoId', md_upload, CertificateController.uploadPdf);
+router.post('/new-certificate', CertificateController.save);
+router.post('/certificate/:certificateId', md_upload, CertificateController.uploadPdf);
 router.get('/pdf/:fileName', CertificateController.certificatePdf);
-router.get('/certificado/:certificadoId', CertificateController.getCertificate);
+router.get('/certificate/:id', CertificateController.getCertificate);
+router.get('/certificates', CertificateController.getCertificates);
 
 module.exports = router;

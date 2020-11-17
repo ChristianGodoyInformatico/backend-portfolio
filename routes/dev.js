@@ -14,6 +14,7 @@ router.get('/prob', DevController.probando);
 
 // RUTAS DE DESARROLLOS
 router.post('/dev', DevController.save);
-router.get('/proyectos', DevController.getDevs);
+router.get('/projects', DevController.getDevs);
+router.get('/project/:id', DevController.getDev);
 
 module.exports = router;
