@@ -39,6 +39,7 @@ var controller = {
 
 			dev.title = params.title;
 			dev.detail = params.detail;
+			dev.repo = params.repo;
 
 			dev.save((err, devStored) => {
 
