@@ -275,7 +275,7 @@ var controller = {
 
 		// CONSEGUIR EL NOMBRE Y LA EXTENSION DEL ARCHIVO SUBIDO
 		var file_path = req.files.file0.path;
-		var file_split = file_path.split('\\');
+		var file_split = file_path.split('/');
 
 		// NOMBRE DEL ARCHIVO
 		file_name = file_split[2];
