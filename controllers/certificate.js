@@ -44,7 +44,7 @@ var controller = {
 
 					return res.status(404).send({
 						status: 'error',
-						message: 'El tema no se ha guardado'
+						message: 'El certificado no se ha guardado'
 					});
 
 				}
@@ -152,7 +152,7 @@ var controller = {
 				return res.sendFile(path.resolve(pathFile));
 			}else{
 				return res.status(404).send({
-					message: 'La imagen no existe'
+					message: 'EL certificado no existe'
 				});
 			}
 
@@ -170,7 +170,7 @@ var controller = {
 			if(err || !certificate){
 				return res.status(404).send({
 					status: 'error',
-					message: 'No existe el usuario'
+					message: 'No existe el certificado'
 				});
 			}
 
@@ -190,7 +190,7 @@ var controller = {
 			if(err || !certificates){
 				return res.status(404).send({
 					status: 'error',
-					message: 'No hay usuarios que mostrar'
+					message: 'No hay certificados que mostrar'
 				});
 			}
 
@@ -201,7 +201,128 @@ var controller = {
 
 		});
 
+	},
+
+	delete: function(req, res){
+
+		// SACAR EL ID DEL CERTIFICADO DE LA URL
+		var certificateId = req.params.id;
+
+		// FIND AND DELETE POR CERTIFICATEID
+		Certificate.findOneAndDelete({_id: certificateId}, (err, certificateRemoved) => {
+
+			var fileName = certificateRemoved.pdf;
+			var pathFile = './uploads/certificates/'+fileName;
+
+			fs.exists(pathFile, (exists) => {
+
+				if(exists){
+					
+					fs.unlink(pathFile, (err) => {
+
+						return res.status(200).send({cert: certFile});
+
+					});
+
+				}else{
+					return res.status(404).send({
+						message: 'EL certificado no existe'
+					});
+				}
+
+			});
+
+			if(err){
+				return res.status(500).send({
+					status: 'error',
+					message: 'Error en la peticion'
+				});
+			}
+
+			if(!certificateRemoved){
+				return res.status(404).send({
+					status: 'error',
+					message: 'No se ha borrado el certificado'
+				});
+			}
+
+			if(certificateRemoved){
+
+				// DEVOLVER RESPUESTA
+				return res.status(200).send({
+					status: 'success',
+					certificate: certificateRemoved
+				});
+
+			}
+			
+
+		});
+
+	},
+
+	update: function(req, res){
+
+		// RECOGER EL ID DEL CERTIFICADO DE LA URL
+		var certificateId = req.params.id;
+
+		// RECOGER LOS DATOS QUE LLEGAN DESDE POST
+		var params = req.body;
+
+		// VALIDAR DATOS
+		try{
+			var validate_title = !validator.isEmpty(params.title);
+			var validate_description = !validator.isEmpty(params.description);
+
+		}catch(err){
+
+			return res.status(200).send({
+				message: 'Faltan datos por enviar'
+			});
+
+		}
+
+		if(validate_title && validate_description){
+			// MONTAR UN JSON CON LOS DATOS MODIFICABLES
+			var update = {
+				title: params.title,
+				description: params.description
+			};
+
+			// FIND AND UPDATE DEL CERTIFICADO POR ID
+			Certificate.findOneAndUpdate({_id: certificateId}, update, {new:true}, (err, certificateUpdated) => {
+				
+				if(err){
+					return res.status(500).send({
+						status: 'error',
+						message: 'Error en la peticion'
+					});
+				}
+
+				if(!certificateUpdated){
+					return res.status(404).send({
+						status: 'error',
+						message: 'No se ha actualizado el certificado'
+					});
+				}
+
+				// DEVOLVER RESPUESTA
+				return res.status(200).send({
+					status: 'success',
+					certificate: certificateUpdated
+				});
+
+			});
+
+		}else{
+			return res.status(200).send({
+				status: 'error',
+				message: 'La validacion de los datos no es correcta'
+			});
+		}
+
 	}
+
 
 };
 

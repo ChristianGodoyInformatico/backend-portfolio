@@ -124,6 +124,49 @@ var controller = {
 
 	},
 
+	delete: function(req, res){
+
+		var devId = req.params.id;
+
+		Dev.findById(devId)
+			.exec((err, devImg) => {
+
+			for(var i = 0; i < devImg.images.length; i++){
+				var imagen = devImg.images[i].image;
+				
+				var pathFile = './uploads/projects/'+imagen;
+
+				fs.exists(pathFile, (exists) => {
+
+					if(exists){
+						
+						fs.unlink(pathFile, (err) => {
+
+							console.log('La imagen '+'"'+ imagen +"'"+ 'se ha eliminado');
+
+						});
+
+					}else{
+						console.log('La imagen '+'"'+ imagen +"'"+ 'NO se ha eliminado');
+					}
+
+				});
+				
+			}
+
+			return res.status(200).send({
+				dev_img: devImg
+			});
+
+		});
+
+	},
+
+
+	delete2: function(req, res){
+
+	}
+
 
 };
 

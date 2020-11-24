@@ -5,7 +5,6 @@ var Schema = mongoose.Schema;
 
 // Modelo de Imagenes de un desarrollo
 var Images_devSchema = Schema({
-	title: String,
 	image: String
 });
 
@@ -16,9 +15,8 @@ var DevSchema = Schema({
 	title: String,
 	detail: String,
 	repo: String,
-	images: [Images_devSchema],
-	video: String,
-	date: { type: Date, default: Date.now }
+	date: { type: Date, default: Date.now },
+	images: [Images_devSchema]
 });
 
 module.exports = mongoose.model('Dev', DevSchema);

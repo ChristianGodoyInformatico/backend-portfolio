@@ -13,8 +13,10 @@ var md_upload = multipart({ uploadDir: './uploads/users' });
 router.get('/prob', DevController.probando);
 
 // RUTAS DE DESARROLLOS
-router.post('/dev', DevController.save);
+router.post('/project', md_auth.authenticated, DevController.save);
 router.get('/projects', DevController.getDevs);
 router.get('/project/:id', DevController.getDev);
+router.delete('/project/:id', md_auth.authenticated, DevController.delete);
+router.put('/project/:id', md_auth.authenticated, DevController.update);
 
 module.exports = router;

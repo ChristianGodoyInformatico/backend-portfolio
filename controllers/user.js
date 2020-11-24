@@ -19,12 +19,6 @@ var controller = {
 		});
 	},
 
-	testeando: function(req, res){
-		return res.status(200).send({
-			message: 'Soy el metodo testeando'
-		});
-	},
-
 	save: function(req, res){
 		// RECOGER LOS PARAMETOS DE LA PETICION
 		var params = req.body;
@@ -288,6 +282,13 @@ var controller = {
 		// COMPORBAR EXTENSION DEL ARCHIVO (SOLO IMAGENES), SI NO ES VALIDA BORRAR FICHERO SUBIDO
 		if(file_ext != 'png' && file_ext != 'jpg' && file_ext != 'jpeg' && file_ext != 'gif'){
 			fs.unlink(file_path, (err) => {
+
+				if(err){
+						return res.status(200).send({
+						status: 'error',
+						message: 'Ocurrio un error al intentar borrar al archivo que no es permitido'
+					});
+				}
 
 				return res.status(200).send({
 					status: 'error',

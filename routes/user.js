@@ -11,7 +11,6 @@ var md_upload = multipart({ uploadDir: './uploads/users' });
 
 // RUTAS DE PRUEBA
 router.get('/probando', UserController.probando);
-router.post('/testeando', UserController.testeando);
 
 // RUTAS DE USUARIOS
 router.post('/register', UserController.save);

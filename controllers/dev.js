@@ -25,6 +25,7 @@ var controller = {
 		try{
 			var validate_title = !validator.isEmpty(params.title);
 			var validate_detail = !validator.isEmpty(params.detail);
+			var validate_url = validator.isURL(params.repo) || validator.isEmpty(params.repo);
 		}catch(err){
 
 			return res.status(400).send({
@@ -33,7 +34,7 @@ var controller = {
 
 		}
 
-		if(validate_title && validate_detail){
+		if(validate_title && validate_detail && validate_url){
 
 			var dev = new Dev();
 
@@ -112,6 +113,101 @@ var controller = {
 			});
 
 		});	
+
+	},
+
+	update: function(req, res){
+		// RECOGER EL ID DEL TOPIC DE LA URL
+		var devId = req.params.id;
+
+		// RECOGER LOS DATOS QUE LLEGAN DESDE POST
+		var params = req.body;
+
+		// VALIDAR DATOS
+		try{
+			var validate_title = !validator.isEmpty(params.title);
+			var validate_detail = !validator.isEmpty(params.detail);
+			var validate_url = validator.isURL(params.repo);
+
+		}catch(err){
+
+			return res.status(200).send({
+				message: 'Faltan datos por enviar'
+			});
+
+		}
+
+		if(validate_title && validate_detail && validate_url){
+			// MONTAR UN JSON CON LOS DATOS MODIFICABLES
+			var update = {
+				title: params.title,
+				detail: params.detail,
+				repo: params.repo
+			};
+
+			// FIND AND UPDATE DEL TOPIC POR ID Y POR ID DE USUARIO
+			Dev.findOneAndUpdate({_id: devId}, update, {new:true}, (err, devUpdated) => {
+				
+				if(err){
+					return res.status(500).send({
+						status: 'error',
+						message: 'Error en la peticion'
+					});
+				}
+
+				if(!devUpdated){
+					return res.status(404).send({
+						status: 'error',
+						message: 'No se ha actualizado el proyecto'
+					});
+				}
+
+				// DEVOLVER RESPUESTA
+				return res.status(200).send({
+					status: 'success',
+					dev: devUpdated
+				});
+
+			});
+
+		}else{
+			return res.status(200).send({
+				status: 'error',
+				message: 'La validacion de los datos no es correcta'
+			});
+		}
+
+	},
+
+
+	delete: function(req, res){
+		// SACAR EL ID DEL TOPIC DE LA URL
+		var devId = req.params.id;
+
+		// FIND AND DELETE POR TOPICID Y POR USERID
+		Dev.findOneAndDelete({_id: devId}, (err, devRemoved) => {
+
+			if(err){
+				return res.status(500).send({
+					status: 'error',
+					message: 'Error en la peticion'
+				});
+			}
+
+			if(!devRemoved){
+				return res.status(404).send({
+					status: 'error',
+					message: 'No se ha borrado el proyecto'
+				});
+			}
+
+			// DEVOLVER RESPUESTA
+			return res.status(200).send({
+				status: 'success',
+				dev: devRemoved
+			});
+
+		});
 
 	}
 
