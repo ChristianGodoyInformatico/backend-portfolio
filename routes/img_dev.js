@@ -13,7 +13,8 @@ var md_upload = multipart({ uploadDir: './uploads/projects' });
 router.get('/probando-img', ImgDevController.probando);
 router.post('/project-img/:devId', [md_upload, md_auth.authenticated], ImgDevController.add);
 router.get('/image/:fileName', ImgDevController.getImages);
-router.delete('/project-images/:id',md_auth.authenticated, ImgDevController.delete);
+router.delete('/project-images/:id',md_auth.authenticated, ImgDevController.deleteImages);
+router.delete('/project/:devId/:imageId',md_auth.authenticated, ImgDevController.deleteImage);
 
 // RUTAS DE DESARROLLOS
 

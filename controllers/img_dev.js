@@ -124,7 +124,7 @@ var controller = {
 
 	},
 
-	delete: function(req, res){
+	deleteImages: function(req, res){
 
 		var devId = req.params.id;
 
@@ -133,28 +133,25 @@ var controller = {
 
 			for(var i = 0; i < devImg.images.length; i++){
 				var imagen = devImg.images[i].image;
+				console.log(devImg.images[i].image);
 				
 				var pathFile = './uploads/projects/'+imagen;
+				
+				fs.unlink(pathFile, (err) => {
 
-				fs.exists(pathFile, (exists) => {
-
-					if(exists){
-						
-						fs.unlink(pathFile, (err) => {
-
-							console.log('La imagen '+'"'+ imagen +"'"+ 'se ha eliminado');
-
-						});
-
+					if(err){
+						console.log('la imagen: '+imagen+' NO fue eliminada');
 					}else{
-						console.log('La imagen '+'"'+ imagen +"'"+ 'NO se ha eliminado');
+						console.log('la imagen: '+imagen+' fue eliminada con exito');
 					}
 
 				});
+
 				
 			}
 
 			return res.status(200).send({
+				status: 'success',
 				dev_img: devImg
 			});
 
@@ -162,8 +159,107 @@ var controller = {
 
 	},
 
+	deleteImage: function(req, res){
+		var devId = req.params.devId;
+		var imageId = req.params.imageId;
 
-	delete2: function(req, res){
+		Dev.findById(devId, (err, dev) => {
+
+			if(err){
+
+				return res.status(500).send({
+					status: 'error',
+					message: 'Error en la peticion'
+				});
+
+			}
+
+			if(!dev){
+
+				return res.status(404).send({
+					status: 'error',
+					message: 'No existe el proyecto'
+				});
+
+			}
+
+			// SELECCIONANDO EL DOCUMENTO QUE SE ELIMINARÁ
+			var imagenObj = dev.images.id(imageId);
+
+			if(imagenObj){
+
+				var image_name = imagenObj.image;
+				
+				var pathFile = './uploads/projects/'+image_name;
+				
+				// BORRAR EL ARCHIVO DE LA IMAGEN	
+				fs.unlink(pathFile, (err) => {
+
+					if(err){
+						console.log('la imagen: '+image_name+' NO fue eliminada');
+					}else{
+						console.log('la imagen: '+image_name+' fue eliminada con exito');
+					}
+
+				});
+
+				// BORRAR EL OBJETO DE LA IMAGEN
+				imagenObj.remove();
+
+				// GUARDAR EL NUEVO ESTADO DEL PROYECTO
+				dev.save((err) => {
+
+					if(err){
+
+						return res.status(500).send({
+							status: 'error',
+							message: 'Error en la peticion'
+						});
+
+					}
+
+					Dev.findById(devId).exec((err, dev) =>{
+
+						if(err){
+
+								return res.status(500).send({
+									status: 'error',
+									message: 'Error en la peticion'
+								});
+
+							}
+
+						if(!dev){
+
+							return res.status(404).send({
+								status: 'error',
+								message: 'No existe el tema'
+							});
+
+						}
+
+
+						// DEVOLVER RESULTADO
+						return res.status(200).send({
+							status: 'success',
+							dev
+						});
+
+					});
+
+				});
+
+
+			}else{
+
+				return res.status(404).send({
+					status: 'error',
+					message: 'No existe la imagen'
+				});
+
+			}
+
+		});
 
 	}
 

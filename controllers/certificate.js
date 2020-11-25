@@ -214,23 +214,18 @@ var controller = {
 			var fileName = certificateRemoved.pdf;
 			var pathFile = './uploads/certificates/'+fileName;
 
-			fs.exists(pathFile, (exists) => {
 
-				if(exists){
+			if(certificateRemoved.pdf != null){
 					
-					fs.unlink(pathFile, (err) => {
+				fs.unlink(pathFile, (err) => {
 
-						return res.status(200).send({cert: certFile});
+					console.log("El arcivho PDF: "+"'"+certificateRemoved.pdf+"'"+" ha sido eliminado.");
 
-					});
+				});
 
-				}else{
-					return res.status(404).send({
-						message: 'EL certificado no existe'
-					});
-				}
-
-			});
+			}else{
+				console.log('El certificado: '+certificateRemoved.title+' no posee un PDF');
+			}
 
 			if(err){
 				return res.status(500).send({
@@ -249,7 +244,7 @@ var controller = {
 			if(certificateRemoved){
 
 				// DEVOLVER RESPUESTA
-				return res.status(200).send({
+				return res.status(200).json({
 					status: 'success',
 					certificate: certificateRemoved
 				});
